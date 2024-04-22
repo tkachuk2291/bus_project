@@ -1,0 +1,95 @@
+{
+  "station.facility": [
+    {
+      "pk": 1,
+      "model": "station.facility",
+      "fields": {
+        "name": "WiFi"
+      }
+    },
+    {
+      "pk": 2,
+      "model": "station.facility",
+      "fields": {
+        "name": "Air conditioning"
+      }
+    },
+    {
+      "pk": 3,
+      "model": "station.facility",
+      "fields": {
+        "name": "Entertainment system"
+      }
+    }
+  ],
+  "station.bus": [
+    {
+      "pk": 1,
+      "model": "station.bus",
+      "fields": {
+        "info": "Bus 1",
+        "num_seats": 30
+      }
+    },
+    {
+      "pk": 2,
+      "model": "station.bus",
+      "fields": {
+        "info": "Bus 2",
+        "num_seats": 20
+      }
+    }
+  ],
+  "station.trip": [
+    {
+      "pk": 1,
+      "model": "station.trip",
+      "fields": {
+        "source": "City A",
+        "destination": "City B",
+        "departure": "2024-04-16T12:00:00Z",
+        "bus": 1
+      }
+    },
+    {
+      "pk": 2,
+      "model": "station.trip",
+      "fields": {
+        "source": "City B",
+        "destination": "City C",
+        "departure": "2024-04-17T12:00:00Z",
+        "bus": 2
+      }
+    }
+  ],
+  "station.ticket": [
+    {
+      "pk": 1,
+      "model": "station.ticket",
+      "fields": {
+        "seats": 5,
+        "trip": 1,
+        "order": 1
+      }
+    },
+    {
+      "pk": 2,
+      "model": "station.ticket",
+      "fields": {
+        "seats": 3,
+        "trip": 2,
+        "order": 1
+      }
+    }
+  ],
+  "station.order": [
+    {
+      "pk": 1,
+      "model": "station.order",
+      "fields": {
+        "created_at": "2024-04-16T08:00:00Z",
+        "user": 1
+      }
+    }
+  ]
+}
