@@ -26,7 +26,7 @@ def bus_image_path(instance, filename):
 class Bus(models.Model):
     info = models.CharField(max_length=255, null=True)
     num_seats = models.IntegerField()
-    facilities = models.ManyToManyField(Facility, related_name="buses")
+    facilities = models.ManyToManyField(Facility, related_name="buses", blank=True)
     image = models.ImageField(null=True, upload_to=bus_image_path)
 
     class Meta:

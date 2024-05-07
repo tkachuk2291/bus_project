@@ -1,4 +1,5 @@
 from django.contrib.admin import actions
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404, GenericAPIView
@@ -47,8 +48,6 @@ from station.serializers import BusSerializer, TripSerializer, BusListSerializer
 class FacilityViewSet(viewsets.ModelViewSet):
     queryset = Facility.objects.all()
     serializer_class = FacilitySerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAdminAllORISAuthenticatedReadOnly,)
 
 
 class BusViewSet(viewsets.ModelViewSet):
@@ -77,6 +76,31 @@ class BusViewSet(viewsets.ModelViewSet):
             return queryset.prefetch_related("facilities")
         return queryset.distinct()
 
+    @action(methods=['POST'],
+            detail=True,
+            permission_classes=[IsAdminUser],
+            url_path='upload-image')
+    def upload_image(self, request, pk=None):
+        bus = self.get_object()
+        serializer = self.get_serializer(bus, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='facilities',
+                type={"type": "array", "items": {"type": "number"}},
+                description='Filter by facility id(ex. ?facilities=2,3)',
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """ Get list of buses. """
+        return super().list(request, *args, **kwargs)
+
 
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all().select_related()
@@ -102,16 +126,3 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-@action(methods=['POST'],
-        detail=True,
-        permission_classes=[IsAdminUser],
-        url_path='upload-image')
-def upload_image(self, request, pk=None):
-    bus = self.get_object()
-    serializer = self.get_serializer(bus, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
